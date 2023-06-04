@@ -3,12 +3,15 @@ import random
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
+from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from main.models import Product, Category, Blog
 
 
 # Create your views here.
+
+
 
 
 
@@ -20,6 +23,15 @@ def index(request):
         'title': 'первые 6 случайных продуктов'
     }
     return render(request, 'main/index.html', context=context)
+
+class CategoryListView(ListView):
+    model=Category
+    extra_context = {
+        'title': 'Список категорий'
+    }
+
+
+
 
 
 class ProductListView(ListView):
@@ -36,30 +48,6 @@ class ProductListView(ListView):
 
 
 
-# def products(request):
-#     context = {
-#         'object_list': Product.objects.all(),
-#         'title': 'Список продуктов'
-#     }
-#     return render(request, 'main/product_list.html', context=context)
-
-class CategoryListView(ListView):
-    model=Category
-    extra_context = {
-        'title': 'Список категорий'
-    }
-
-
-
-# def category(request):
-#     context = {
-#         'object_list': Category.objects.all(),
-#         'title': 'Список категорий'
-#     }
-#
-#     return render(request, 'main/category_list.html', context=context)
-
-
 class ProductDetailView(DetailView):
     model=Product
 
@@ -67,16 +55,6 @@ class ProductDetailView(DetailView):
         context_data = super().get_context_data( **kwargs)
         context_data['title'] = context_data['object'].product_name
         return context_data
-
-
-# def product_detail(request, pk):
-#     product_item = Product.objects.get(pk=pk),
-#     context = {
-#         'object': product_item[0],
-#         'title': product_item[0].product_name
-#
-#     }
-#     return render(request, 'main/product_detail.html', context=context)
 
 
 class ProductCreateView(CreateView):
@@ -94,13 +72,8 @@ class ProductDeleteView (DeleteView ):
     success_url = reverse_lazy('main:product_list')
 
 
-# def product_card(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         phone = request.POST.get('phone')
-#         message = request.POST.get('message')
-#         print(f'User {name} with phone {phone}- send message: {message}')
-#     return render(request, 'main/product_detail.html')
+
+
 
 class BlogListView(ListView):
     model=Blog
@@ -114,11 +87,7 @@ class BlogListView(ListView):
         queryset = queryset.filter(is_publication=True)
         return queryset
 
-# class UsersListView(ListView):
-#     model=Users
-#     extra_context = {
-#         'title': 'Список пользователей'
-#     }
+
 
 class BlogDetailView(DetailView):
     model=Blog
@@ -132,10 +101,21 @@ class BlogDetailView(DetailView):
     # Обновлени счетчика просмотрове
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
+        # Обновлени счетчика просмотрове
         self.object.views_count += 1
+        # переход на slug
+        if not  self.object.slug:
+            self.object.slug = slugify(self.object.message_heading)
+        # запись изменений
         self.object.save()
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
+
+
+    def get_absolute_url(self):
+        return reverse('blog_item', kwargs={'slug': self.object.slug})  # new
+
+
 
 
 
@@ -144,9 +124,6 @@ class BlogCreateView(CreateView):
     model=Blog
     fields = ('message_heading', 'message_content', 'message_preview', 'is_publication',)
     success_url = reverse_lazy('main:blog_list')
-
-
-
 
 
 
@@ -161,3 +138,14 @@ class BlogUpdateView(UpdateView):
 class BlogDeleteView (DeleteView ):
     model=Blog
     success_url = reverse_lazy('main:blog_list')
+
+
+
+
+
+
+# class UsersListView(ListView):
+#     model=Users
+#     extra_context = {
+#         'title': 'Список пользователей'
+#     }
