@@ -55,7 +55,7 @@ class Blog(models.Model):
     date_of_change = models.DateField(default=date.today, verbose_name='Дата последнего изменения')
     is_publication = models.BooleanField(default=True, verbose_name='Опубликовано')
     views_count = models.IntegerField(default=0,verbose_name='Количество просмотров')
-    user_name = models.CharField(max_length=250,  **NULLABLE, verbose_name='Пользователи')
+    # user_name = models.CharField(max_length=250,  **NULLABLE, verbose_name='Пользователи')
 
 
 
