@@ -103,9 +103,6 @@ class BlogDetailView(DetailView):
         self.object = self.get_object()
         # Обновлени счетчика просмотрове
         self.object.views_count += 1
-        # переход на slug
-        if not  self.object.slug:
-            self.object.slug = slugify(self.object.message_heading)
         # запись изменений
         self.object.save()
         context = self.get_context_data(object=self.object)
@@ -124,6 +121,9 @@ class BlogCreateView(CreateView):
     model=Blog
     fields = ('message_heading', 'message_content', 'message_preview', 'is_publication',)
     success_url = reverse_lazy('main:blog_list')
+
+
+
 
 
 

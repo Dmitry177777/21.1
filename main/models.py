@@ -69,9 +69,7 @@ class Blog(models.Model):
 
 
     def save(self, *args, **kwargs):  # new
-        if not self.slug:
-            self.slug = slugify(self.message_heading)
-            self.save()
+        self.slug = slugify(self.message_heading)
         return super().save(*args, **kwargs)
 
 
