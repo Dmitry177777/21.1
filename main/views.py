@@ -12,89 +12,86 @@ from main.models import Product, Category, Blog
 # Create your views here.
 
 
-
-
-
-
-def index(request):
-    product_list = Product.objects.all().order_by('?')[:6]
-    context = {
-        'object_list': product_list,
-        'title': 'первые 6 случайных продуктов'
+class index(ListView):
+    model = Product
+    extra_context = {
+        'title': 'Первые продукты'
     }
-    return render(request, 'main/index.html', context=context)
+
+    # Метод переопределяет представление и выводит только продукты с атрибутом (is_active=True)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(is_active=True)
+        return queryset[:6]
+
+
+
 
 class CategoryListView(ListView):
-    model=Category
+    model = Category
     extra_context = {
         'title': 'Список категорий'
     }
 
 
-
-
-
 class ProductListView(ListView):
-    model=Product
+    model = Product
     extra_context = {
         'title': 'Список продуктов'
     }
 
-# Метод переопределяет представление и выводит только продукты с атрибутом is_active=True)
+    # Метод переопределяет представление и выводит только продукты с атрибутом is_active=True)
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(is_active=True)
         return queryset
 
 
-
 class ProductDetailView(DetailView):
-    model=Product
+    model = Product
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data( **kwargs)
+        context_data = super().get_context_data(**kwargs)
         context_data['title'] = context_data['object'].product_name
         return context_data
 
 
 class ProductCreateView(CreateView):
-    model=Product
+    model = Product
     fields = ('product_category', 'product_name', 'description', 'product_price',)
     success_url = reverse_lazy('main:product_list')
+
 
 class ProductUpdateView(UpdateView):
-    model=Product
+    model = Product
     fields = ('product_category', 'product_name', 'description', 'product_price',)
     success_url = reverse_lazy('main:product_list')
 
-class ProductDeleteView (DeleteView ):
-    model=Product
+
+class ProductDeleteView(DeleteView):
+    model = Product
     success_url = reverse_lazy('main:product_list')
-
-
-
 
 
 class BlogListView(ListView):
-    model=Blog
+    model = Blog
     extra_context = {
         'title': 'Список постов'
     }
 
-# Метод переопределяет представление и выводит только продукты с атрибутом is_active=True)
+    # Метод переопределяет представление и выводит только продукты с атрибутом is_active=True)
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(is_publication=True)
         return queryset
 
 
-
 class BlogDetailView(DetailView):
-    model=Blog
+    model = Blog
     success_url = reverse_lazy('main:blog_list')
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data( **kwargs)
+        context_data = super().get_context_data(**kwargs)
         context_data['title'] = context_data['object'].message_heading
         return context_data
 
@@ -109,40 +106,24 @@ class BlogDetailView(DetailView):
         return self.render_to_response(context)
 
 
-    def get_absolute_url(self):
-        return reverse('blog_item', kwargs={'slug': self.object.slug})  # new
-
-
-
-
-
-
 class BlogCreateView(CreateView):
-    model=Blog
+    model = Blog
     fields = ('message_heading', 'message_content', 'message_preview', 'is_publication',)
     success_url = reverse_lazy('main:blog_list')
 
 
-
-
-
-
 class BlogUpdateView(UpdateView):
-    model=Blog
+    model = Blog
     fields = ('message_heading', 'message_content', 'message_preview', 'is_publication',)
 
     # Получаем данные объекта и выводим ту же страницу
     def get_success_url(self) -> str:
         return reverse_lazy('main:blog_update', kwargs={'pk': self.object.pk})
 
-class BlogDeleteView (DeleteView ):
-    model=Blog
+
+class BlogDeleteView(DeleteView):
+    model = Blog
     success_url = reverse_lazy('main:blog_list')
-
-
-
-
-
 
 # class UsersListView(ListView):
 #     model=Users

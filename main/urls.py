@@ -8,7 +8,7 @@ from main.apps import MainConfig
 app_name = MainConfig.name
 
 urlpatterns = [
-    path('', index, name="index"),
+    path('', index.as_view(), name="index"),
     path('products/', ProductListView.as_view(), name='product_list'),
     path('category/', CategoryListView.as_view(), name='category_list'),
     path('product_item/<int:pk>/', ProductDetailView.as_view(), name='product_item'),

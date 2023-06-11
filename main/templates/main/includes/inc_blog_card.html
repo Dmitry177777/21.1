@@ -14,7 +14,7 @@
 
         <h2 class="fw-normal">{{object.message_heading|title}}</h2>
         <p>{{object.message_content|truncatechars:100|capfirst }}</p>
-        <p><a class="btn btn-secondary" href="{% url 'main:blog_item' object.slug %}">Посмотреть &raquo;</a></p>
+        <p><a class="btn btn-secondary" href="{% url 'main:blog_item' object.slug %}">Посмотреть</a></p>
         <p><a class="btn btn-warning" href="{% url 'main:blog_update' object.pk %}">Обновить &raquo;</a></p>
         <p><a class="btn btn-danger" href="{% url 'main:blog_delete' object.pk %}">Удалить &raquo;</a></p>
         <p>Просмотров: {{object.views_count|title}}</p>
