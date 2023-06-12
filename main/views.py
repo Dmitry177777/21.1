@@ -9,8 +9,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from main.forms import ProductForm, VersionForm
 from main.models import Product, Category, Blog, Version
-from main.forms import ProductForm
-from main.models import Product, Category, Blog
+
 
 
 # Create your views here.
@@ -62,6 +61,7 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
+    template_name = 'main\product_form_with_formset.html'
     # fields = ('product_category', 'product_name', 'description', 'product_price',)
     form_class = ProductForm
     success_url = reverse_lazy('main:product_list')
