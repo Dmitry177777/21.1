@@ -79,7 +79,7 @@ PSQL_Key :str = os.getenv('PostgreSQL_Key')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'project21',
+        'NAME': 'project',
         'USER': 'postgres',
         'PASSWORD': PSQL_Key,
         'HOST': '127.0.0.1',
