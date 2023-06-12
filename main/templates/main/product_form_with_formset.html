@@ -1,0 +1,53 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="col">
+     <form method="post" class="row">
+         <div class="col-6">
+                 <div class="card  text-center">
+                        <div class="card-header">
+                            Продукты
+                        </div>
+
+                         <div class="card-body">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                            <input type="submit" class="btn btn-success" value="{% if object %}Сохранить{% else %}Создать{% endif %}" >
+
+                        </div>
+
+
+
+
+                    <div class="card-footer">
+                            <a href="{% url 'main:product_list' %}" class = "btn btn-primary"> <<Назад</a>
+                    </div>
+                </div>
+            </div>
+
+         <div class="col-6">
+            <div class="card text-center">
+
+                    <div class="card-header" >
+                        Версии
+                    </div>
+
+                    <div class="card -body">
+                         <table class="table">
+                             {{formset.management_form}}
+                             {% for form in formset.forms %}
+                                  <tr class="subject-form">
+                                      {{form.as_p}}
+                                  </tr>
+
+                             {% endfor %}
+
+                             </table>
+                         </div>
+                </div>
+
+
+            </div>
+     </form>
+ </div>
+ {% endblock %}

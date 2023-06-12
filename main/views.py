@@ -1,12 +1,14 @@
 import random
 
+from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from main.models import Product, Category, Blog
+from main.forms import ProductForm, VersionForm
+from main.models import Product, Category, Blog, Version
 
 
 # Create your views here.
@@ -23,8 +25,6 @@ class index(ListView):
         queryset = super().get_queryset()
         queryset = queryset.filter(is_active=True)
         return queryset[:6]
-
-
 
 
 class CategoryListView(ListView):
@@ -58,14 +58,27 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ('product_category', 'product_name', 'description', 'product_price',)
+    # fields = ('product_category', 'product_name', 'description', 'product_price',)
+    form_class = ProductForm
     success_url = reverse_lazy('main:product_list')
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ('product_category', 'product_name', 'description', 'product_price',)
+    template_name = 'main\product_form_with_formset.html'
+    # fields = ('product_category', 'product_name', 'description', 'product_price',)
+    form_class = ProductForm
     success_url = reverse_lazy('main:product_list')
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+        if self.request.method == 'POST':
+            context_data['formset'] = VersionFormset(self.request.POST) # Обработка и сохранение POST запроса если он есть
+        else:
+            context_data['formset'] = VersionFormset()
+        return context_data
+
 
 
 class ProductDeleteView(DeleteView):

@@ -14,6 +14,7 @@ class Product(models.Model):
     description = models.CharField(max_length=150, verbose_name='Описание')
     product_image = models.ImageField(upload_to='product_image/', verbose_name='Изображение', **NULLABLE)
     product_category = models.ForeignKey('Category', on_delete=models.CASCADE, verbose_name='Категория')
+
     product_price = models.IntegerField(default=None,verbose_name='Цена за покупку', **NULLABLE)
     date_of_creation = models.DateField(default=date.today, verbose_name='Дата создания')
     date_of_change = models.DateField(default=date.today, verbose_name='Дата последнего изменения')
@@ -34,7 +35,30 @@ class Product(models.Model):
         verbose_name_plural='продукции'
         ordering = ('product_category', )
 
+class Version(models.Model):
+    product_name = models.ForeignKey('Product', on_delete=models.CASCADE, verbose_name='Наименование', **NULLABLE)
+    product_version = models.IntegerField (verbose_name='Версия')
+    description = models.CharField(max_length=150, verbose_name='Описание версии')
+    is_active = models.BooleanField(default=True, verbose_name='Наличие активной версии')
+
+    def __str__(self):
+        return f'{self.product_name} : {self.description} : {self.product_version} '
+
+
+# функция переопределяет удаление и не удаляет объект а переводит флаг is_active = False
+    def delete(self, *args, **kwargs):
+        self.is_active = False
+        self.save()
+
+
+    class Meta:
+        verbose_name='версия'
+        verbose_name_plural='версии'
+        ordering = ('product_name', )
+
 class Category(models.Model):
+
+
     product_category = models.CharField(max_length=150, verbose_name='Наименование')
     description = models.CharField(max_length=150, verbose_name='Описание')
     is_active = models.BooleanField(default=True, verbose_name='Активные категории')
@@ -46,6 +70,7 @@ class Category(models.Model):
         verbose_name='категория'
         verbose_name_plural='категории'
         ordering = ('product_category', )
+
 
 
 
