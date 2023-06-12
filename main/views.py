@@ -6,6 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from main.forms import ProductForm
 from main.models import Product, Category, Blog
 
 
@@ -58,13 +59,15 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ('product_category', 'product_name', 'description', 'product_price',)
+    # fields = ('product_category', 'product_name', 'description', 'product_price',)
+    form_class = ProductForm
     success_url = reverse_lazy('main:product_list')
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ('product_category', 'product_name', 'description', 'product_price',)
+    # fields = ('product_category', 'product_name', 'description', 'product_price',)
+    form_class = ProductForm
     success_url = reverse_lazy('main:product_list')
 
 
