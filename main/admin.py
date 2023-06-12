@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from main.models import Product, Category, Blog
+from main.models import Product, Category, Blog, Version
 
 
 # Register your models here.
@@ -26,4 +26,8 @@ class BlogAdmin(admin.ModelAdmin):
     list_filter = ('is_publication', )
     prepopulated_fields = {"slug": ("message_heading",)}
 
-
+@admin.register(Version)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('product_name', 'product_version','description', )
+    search_fields = ('product_name', 'description',)
+    list_filter = ('is_active', )
