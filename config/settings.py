@@ -147,3 +147,5 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = '/'
+
