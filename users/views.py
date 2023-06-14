@@ -1,4 +1,7 @@
+import os
+
 from django.contrib.auth.forms import UserChangeForm
+from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView, CreateView
 
@@ -20,10 +23,19 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('main:index')
 
     def get_object(self, queryset=None):
+        self.send_order_email()
         return self.request.user
 
+    def send_order_email(self):
+        Yandex_mail: str = os.getenv('Yandex_mail')
+        send_mail(
+            'Код подтверждения',
+            '1111',
+            Yandex_mail,
+            [self.request.user.email],
+            fail_silently=False,
+        )
+        return send_mail
 
-    def form_valid(self, form):
-        send_order_email()
 
-        return super().form_valid(form)
+

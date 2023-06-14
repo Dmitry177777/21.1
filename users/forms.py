@@ -24,14 +24,7 @@ class UserRegisterForm (FormStyleMixin,UserCreationForm):
 
 
 
-    def send_order_email(self):
-        send_mail(
-            'Код подтверждения',
-            '1111',
-            'from@example.com',
-            [self.user],
-            fail_silently=False,
-        )
+
 
 
     # def __init__ (self, *args, **kwargs):
