@@ -2,7 +2,7 @@ import random
 
 from django.forms import inlineformset_factory
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -67,6 +67,17 @@ class ProductCreateView(CreateView):
     success_url = reverse_lazy('main:product_list')
 
 
+
+    def get_context_data(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            # Обработка ошибки не авторизованных пользователей
+            raise BaseException("Вы не авторизованы. Создавать продукты может только авторизованный пользователь.")
+        else:
+            context_data = super().get_context_data(**kwargs)
+        return context_data
+
+
+
 class ProductUpdateView(UpdateView):
     model = Product
     template_name = 'main\product_form_with_formset.html'
@@ -75,12 +86,16 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy('main:product_list')
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
-        if self.request.method == 'POST':
-            context_data['formset'] = VersionFormset(self.request.POST, instance=self.object) # Обработка и сохранение POST запроса если он есть
+        if not self.request.user.is_authenticated:
+            # Обработка ошибки не авторизованных пользователей
+            raise BaseException("Вы не авторизованы. Создавать продукты может только авторизованный пользователь.")
         else:
-            context_data['formset'] = VersionFormset(instance=self.object)
+            context_data = super().get_context_data(**kwargs)
+            VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+            if self.request.method == 'POST':
+                context_data['formset'] = VersionFormset(self.request.POST, instance=self.object) # Обработка и сохранение POST запроса если он есть
+            else:
+                context_data['formset'] = VersionFormset(instance=self.object)
         return context_data
 
     def form_valid(self, form):
@@ -90,6 +105,7 @@ class ProductUpdateView(UpdateView):
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
+
         return super().form_valid(form)
 
 
