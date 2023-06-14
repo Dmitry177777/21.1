@@ -1,5 +1,5 @@
 import random
-
+from django import forms
 from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -76,6 +76,12 @@ class ProductCreateView(CreateView):
             context_data = super().get_context_data(**kwargs)
         return context_data
 
+    def form_valid(self, form):
+
+        form.instance.is_user_email = self.request.user.email  # запись авторизованного пользователя в шаблон
+        form.save()
+        return super().form_valid(form)
+
 
 
 class ProductUpdateView(UpdateView):
@@ -85,7 +91,10 @@ class ProductUpdateView(UpdateView):
     form_class = ProductForm
     success_url = reverse_lazy('main:product_list')
 
-    def get_context_data(self, **kwargs):
+
+
+
+    def get_context_data(self,  **kwargs):
         if not self.request.user.is_authenticated:
             # Обработка ошибки не авторизованных пользователей
             raise BaseException("Вы не авторизованы. Создавать продукты может только авторизованный пользователь.")
@@ -101,11 +110,13 @@ class ProductUpdateView(UpdateView):
     def form_valid(self, form):
         context_data = self.get_context_data()
         formset = context_data['formset']
+
         self.object =form.save()
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
-
+        form.instance.is_user_email = self.request.user.email  # запись авторизованного пользователя в шаблон
+        form.save()
         return super().form_valid(form)
 
 

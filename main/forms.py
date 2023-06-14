@@ -18,6 +18,8 @@ class ProductForm(FormStyleMixin, forms.ModelForm):
         model = Product
         fields = '__all__'
 
+
+
     def clean_product_name (self):
         cleaned_data = self.cleaned_data['product_name']
         for i in exclusion_list:
@@ -30,8 +32,7 @@ class ProductForm(FormStyleMixin, forms.ModelForm):
         cleaned_data = self.cleaned_data['description']
         for i in exclusion_list:
             if i.lower() in cleaned_data.lower():
-                raise forms.ValidationError(
-                    'Недопустимые слова в описании: казино, криптовалюта, крипта, биржа, дешево, бесплатно, обман, полиция, радар')
+                raise forms.ValidationError('Недопустимые слова в описании: казино, криптовалюта, крипта, биржа, дешево, бесплатно, обман, полиция, радар')
 
         return cleaned_data
 
