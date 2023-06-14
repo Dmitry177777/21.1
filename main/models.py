@@ -19,6 +19,7 @@ class Product(models.Model):
     date_of_creation = models.DateField(default=date.today, verbose_name='Дата создания')
     date_of_change = models.DateField(default=date.today, verbose_name='Дата последнего изменения')
     is_active = models.BooleanField(default=True, verbose_name='Есть на складе')
+    is_user_email = models.EmailField(verbose_name='почта_пользователя', unique=True, **NULLABLE)
 
     def __str__(self):
         return f'{self.product_name} : {self.description} : {self.product_image} {self.product_category} {self.product_price} {self.date_of_creation} {self.date_of_change}'
