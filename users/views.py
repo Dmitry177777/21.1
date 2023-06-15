@@ -28,21 +28,33 @@ class RegisterView(CreateView):
     model = User
     form_class = UserRegisterForm
     success_url = reverse_lazy('main:index')
-    # template_name='man/man.html'
+    # template_name=('users:man')
 
 
     def form_valid(self, form):
         if form.is_valid():
             self.object = form.save()
 
-            Yandex_mail: str = settings.EMAIL_HOST_USER
-            send_mail(
-                'Код подтверждения',
-                '1111',
-                Yandex_mail,
-                [form.cleaned_data['email']],
-                fail_silently=False,
-            )
+            data ={
+                'email': form.cleaned_data['email'],
+                'message': 'Подтвердите регистрацию'
+
+            }
+
+
+            html_body = render_to_string("users/message_registr.html", data)
+            msg=EmailMultiAlternatives(subject="Регистрация", to=[form.cleaned_data["email"]])
+            msg.attach_alternative(html_body, "text/html")
+            msg.send()
+
+
+            # send_mail(
+            #     'Подтвержднение регистрации',
+            #     'Код подтверждения 1111',
+            #     settings.EMAIL_HOST_USER,
+            #     [form.cleaned_data["email"]],
+            #     fail_silently=False,
+            # )
 
         return super().form_valid(form)
 
