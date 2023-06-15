@@ -144,7 +144,7 @@ Yandex_password :str = os.getenv('Yandex_password')
 
 
 
-EMAIL_HOST = 'smtp.yandex.com'
+EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = Yandex_mail
 EMAIL_HOST_PASSWORD = Yandex_password
