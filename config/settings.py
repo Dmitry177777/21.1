@@ -128,10 +128,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-Yandex_mail = os.getenv('Yandex_mail')
-Yandex_password = os.getenv('Yandex_password')
+Yandex_mail: str = os.getenv('Yandex_mail')
+Yandex_password: str = os.getenv('Yandex_password')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'

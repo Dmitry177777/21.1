@@ -9,6 +9,7 @@ from django.views.generic import UpdateView, CreateView
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
+import config.settings
 from config import settings
 from users.forms import UserForm, UserRegisterForm
 from users.models import User
