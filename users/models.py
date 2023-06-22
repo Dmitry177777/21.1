@@ -6,10 +6,8 @@ from main.models import NULLABLE
 
 class User (AbstractUser):
     username = None
-    email = models.EmailField(
-        verbose_name='почта',
-        unique=True
-    )
+    email = models.EmailField(verbose_name='почта', unique=True)
+    password = models.CharField(verbose_name='пароль', max_length=200,)
     is_active = models.BooleanField (default=False)
 
 
