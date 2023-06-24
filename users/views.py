@@ -66,8 +66,8 @@ class RegisterView(CreateView):
             email = form.cleaned_data.get('email')
             # message = 'Подтвердите регистрацию'
             password = form.cleaned_data.get ('password1')
-                        
-            user = authenticate(email=email, password=password)
+            user = User.objects.create_user(email=email, password=password)
+            user = authenticate(request, email=email, password=password)
             send_email_for_verify(request, user)
             return redirect('confirm_email')
 
