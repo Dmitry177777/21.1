@@ -1,5 +1,4 @@
-
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -62,18 +61,18 @@ class RegisterView(CreateView):
     def post(self, request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            # form.save()
             email = form.cleaned_data.get('email')
-            # message = 'Подтвердите регистрацию'
+            message1 = 'Подтвердите регистрацию'
             password = form.cleaned_data.get ('password1')
             user = User.objects.create_user(email=email, password=password)
-            user = authenticate(request, email=email, password=password)
-            send_email_for_verify(request, user)
+            # user = authenticate(request, email=email, password=password)
+            send_email_for_verify(self, request, user)
             return redirect('confirm_email')
 
         context = {
-            'form': form
-        }
+            'form': form,
+           }
         return render(request, self.template_name, context)
 
 
