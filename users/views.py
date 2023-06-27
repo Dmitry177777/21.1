@@ -34,8 +34,8 @@ class EmailVerify(CreateView):
             user.email_verify = True
             user.save()
             login(request, user)
-            return redirect('home')
-        return redirect('invalid_verify')
+            return redirect('users:successful_verify')
+        return redirect('users:invalid_verify')
 
     @staticmethod
     def get_user(uidb64):
