@@ -1,6 +1,10 @@
 from django.contrib.auth import login
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import UpdateView, CreateView
 from users.forms import UserForm, UserRegisterForm
@@ -8,7 +12,7 @@ from users.models import User
 from django.contrib.auth.tokens import default_token_generator as \
     token_generator
 from django.shortcuts import render, redirect
-from users.utils import send_email_for_verify
+
 
 
 
@@ -55,27 +59,42 @@ class RegisterView(CreateView):
         context = {
             'form': UserRegisterForm()
         }
-        return render(request, self.template_name, context)
+        return render(request, RegisterView.template_name, context)
 
 
     def post(self, request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            # form.save()
+
             email = form.cleaned_data.get('email')
-            message1 = 'Подтвердите регистрацию'
             password = form.cleaned_data.get ('password1')
             user = User.objects.create_user(email=email, password=password)
-            # user = authenticate(request, email=email, password=password)
-            send_email_for_verify(self, request, user)
-            return redirect('confirm_email')
+            RegisterView.send_email_for_verify(self, request, user)
+            return redirect('users:confirm_email')
 
         context = {
             'form': form,
            }
-        return render(request, self.template_name, context)
+        return render(request, RegisterView.template_name, context)
 
-
-
+    def send_email_for_verify(self, request, user, ):
+        current_site = get_current_site(request)
+        context = {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': token_generator.make_token(user),
+            'link_message': "Пожалуйста перейдите по ссылке чтобы закончить регистрацию",
+        }
+        message = render_to_string(
+            'users/verify_email.html',
+            context=context,
+        )
+        email = EmailMessage(
+            'Veryfi email',
+            message,
+            to=[user.email],
+        )
+        email.send()
 
 

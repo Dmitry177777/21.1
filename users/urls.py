@@ -15,11 +15,9 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name="logout"),
     path('profile/', ProfileUpdateView.as_view(), name="profile"),
     path('register/', RegisterView.as_view(),  name="register"),
-    path('invalid_verify/', TemplateView.as_view(template_name='users/invalid_verify.html'),
-        name='invalid_verify' ),
+    path('invalid_verify/', TemplateView.as_view(template_name='users/invalid_verify.html'), name='invalid_verify'),
     path('verify_email/<uidb64>/<token>/',EmailVerify.as_view(), name='verify_email', ),
-    path('confirm_email/', TemplateView.as_view(template_name='users/confirm_email.html'),
-        name='confirm_email' ),
+    path('confirm_email/', TemplateView.as_view(template_name='users/confirm_email.html'), name='confirm_email'),
         ]
 
 
