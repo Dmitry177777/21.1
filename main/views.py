@@ -1,5 +1,6 @@
 import random
 from django import forms
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -15,7 +16,7 @@ from main.models import Product, Category, Blog, Version
 # Create your views here.
 
 
-class index(ListView):
+class index(LoginRequiredMixin, ListView):
     model = Product
     extra_context = {
         'title': 'Первые продукты'
@@ -30,14 +31,14 @@ class index(ListView):
 
 
 
-class CategoryListView(ListView):
+class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
     extra_context = {
         'title': 'Список категорий'
     }
 
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     extra_context = {
         'title': 'Список продуктов'
@@ -50,7 +51,7 @@ class ProductListView(ListView):
         return queryset
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
 
     def get_context_data(self, **kwargs):
@@ -59,7 +60,7 @@ class ProductDetailView(DetailView):
         return context_data
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     template_name = 'main\product_form_with_formset.html'
     # fields = ('product_category', 'product_name', 'description', 'product_price',)
@@ -84,7 +85,7 @@ class ProductCreateView(CreateView):
 
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     template_name = 'main\product_form_with_formset.html'
     # fields = ('product_category', 'product_name', 'description', 'product_price',)
@@ -121,12 +122,12 @@ class ProductUpdateView(UpdateView):
 
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('main:product_list')
 
 
-class BlogListView(ListView):
+class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
     extra_context = {
         'title': 'Список постов'
@@ -139,7 +140,7 @@ class BlogListView(ListView):
         return queryset
 
 
-class BlogDetailView(DetailView):
+class BlogDetailView(LoginRequiredMixin, DetailView):
     model = Blog
     success_url = reverse_lazy('main:blog_list')
 
@@ -159,13 +160,13 @@ class BlogDetailView(DetailView):
         return self.render_to_response(context)
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     fields = ('message_heading', 'message_content', 'message_preview', 'is_publication',)
     success_url = reverse_lazy('main:blog_list')
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     fields = ('message_heading', 'message_content', 'message_preview', 'is_publication',)
 
@@ -174,7 +175,7 @@ class BlogUpdateView(UpdateView):
         return reverse_lazy('main:blog_update', kwargs={'pk': self.object.pk})
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('main:blog_list')
 
