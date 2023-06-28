@@ -3,12 +3,16 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'main:index' %}">Главная</a>
           </li>
-          <li class="nav-item">
+       {% if perms.main.view_product %}
+            <li class="nav-item">
             <a class="nav-link" href="{% url 'main:product_list' %}">Продукты</a>
           </li>
+       {% endif %}
+       {% if perms.main.view_category %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'main:category_list' %}">Категории</a>
           </li>
+       {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'main:blog_list' %}">Блог</a>
           </li>

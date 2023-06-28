@@ -1,6 +1,6 @@
 import random
 from django import forms
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -60,9 +60,10 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
         return context_data
 
 
-class ProductCreateView(LoginRequiredMixin, CreateView):
+class ProductCreateView(LoginRequiredMixin,PermissionRequiredMixin, CreateView):
     model = Product
     template_name = 'main\product_form_with_formset.html'
+    permission_required = "main.add_product"
     # fields = ('product_category', 'product_name', 'description', 'product_price',)
     form_class = ProductForm
     success_url = reverse_lazy('main:product_list')
@@ -85,9 +86,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     template_name = 'main\product_form_with_formset.html'
+    permission_required = "main.change_product"
     # fields = ('product_category', 'product_name', 'description', 'product_price',)
     form_class = ProductForm
     success_url = reverse_lazy('main:product_list')
@@ -122,10 +124,10 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('main:product_list')
-
+    permission_required = "main.delete_product"
 
 class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
@@ -160,13 +162,13 @@ class BlogDetailView(LoginRequiredMixin, DetailView):
         return self.render_to_response(context)
 
 
-class BlogCreateView(LoginRequiredMixin, CreateView):
+class BlogCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Blog
     fields = ('message_heading', 'message_content', 'message_preview', 'is_publication',)
     success_url = reverse_lazy('main:blog_list')
 
 
-class BlogUpdateView(LoginRequiredMixin, UpdateView):
+class BlogUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Blog
     fields = ('message_heading', 'message_content', 'message_preview', 'is_publication',)
 
@@ -175,7 +177,7 @@ class BlogUpdateView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('main:blog_update', kwargs={'pk': self.object.pk})
 
 
-class BlogDeleteView(LoginRequiredMixin, DeleteView):
+class BlogDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('main:blog_list')
 
