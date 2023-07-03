@@ -5,7 +5,7 @@ from users.models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'avatar','phone', 'country',)
     search_fields = ('email', 'phone','country',)
-    list_filter = ('avatar', )
+    list_filter = ('avatar', 'is_staff',)
 
 
 
