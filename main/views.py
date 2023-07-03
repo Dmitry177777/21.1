@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import inlineformset_factory
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -96,18 +96,22 @@ class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
 
 
 
-
     def get_context_data(self,  **kwargs):
         if not self.request.user.is_authenticated:
             # Обработка ошибки не авторизованных пользователей
-            raise BaseException("Вы не авторизованы. Создавать продукты может только авторизованный пользователь.")
+            raise BaseException("Вы не авторизованы. Изменять продукты может только авторизованный пользователь.")
         else:
-            context_data = super().get_context_data(**kwargs)
-            VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
-            if self.request.method == 'POST':
-                context_data['formset'] = VersionFormset(self.request.POST, instance=self.object) # Обработка и сохранение POST запроса если он есть
+            if self.request.user.is_superuser or self.object.is_user_email == self.request.user.email: # проверка пользователя на автора или суперюзера
+                context_data = super().get_context_data(**kwargs)
+                VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+                if self.request.method == 'POST':
+                    context_data['formset'] = VersionFormset(self.request.POST, instance=self.object) # Обработка и сохранение POST запроса если он есть
+                else:
+                    context_data['formset'] = VersionFormset(instance=self.object)
+                    # Обработка ошибки не авторизованных пользователей
+
             else:
-                context_data['formset'] = VersionFormset(instance=self.object)
+                raise BaseException("Вы не автор. Вы не администратор.")
         return context_data
 
     def form_valid(self, form):
