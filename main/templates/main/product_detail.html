@@ -11,8 +11,9 @@
                  <div class="card-body">
                     <table class="table table-striped">
                         <tr>
-                            <td class="w-25">Категория</td>
-                            <td>{{object.product_category|title}}</td>
+                            <td class="w-25">Категории</td>
+                            {% for category in product_category %}
+                            {% endfor %}
                         </tr>
                         <tr>
                             <td class="w-25">Имя</td>
