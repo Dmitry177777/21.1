@@ -2,14 +2,14 @@ from django.conf import settings
 from django.core.cache import cache
 
 
-def get_product_category(product):
+def get_category_product(category):
     if settings.CACHE_ENABLED:
-        key = 'product_category'
-        product_category = cache.get(key)
-        if product_category is None:
-            product_category = object.category_set.all()
-            cache.set(key, product_category)
+        key = 'product_list'
+        product_list = cache.get(key)
+        if product_list is None:
+            product_list = category.product_set.all()
+            cache.set(key, product_list)
     else:
-        product_category = object.category_set.all()
+        product_list = category.product_set.all()
 
-    return product_category
+    return product_list

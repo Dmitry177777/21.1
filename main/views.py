@@ -10,7 +10,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from main.forms import ProductForm, VersionForm
 from main.models import Product, Category, Blog, Version
-from main.services import  get_product_category
+from main.services import  get_category_product
 
 
 # Create your views here.
@@ -38,6 +38,15 @@ class CategoryListView(LoginRequiredMixin, ListView):
     }
 
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        # context_data['title'] = context_data['object'].product_category
+        context_data['product_list'] = get_category_product(self.product_category)
+        return context_data
+
+
+
+
 class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     extra_context = {
@@ -57,7 +66,7 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = context_data['object'].product_name
-        context_data['product_category'] = get_product_category(self.object)
+
         return context_data
 
 
