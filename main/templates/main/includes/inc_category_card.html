@@ -2,6 +2,7 @@
 
         <h2 class="fw-normal">{{object.product_category|title}}</h2>
         <p>{{object.description|title}}</p>
-        <p><a class="btn btn-secondary" href="#">Посмотреть &raquo;</a></p>
+        <p>{{product_list|title}}</p>
+        <p><a class="btn btn-secondary" href="{% url 'main:category_item' object.pk %}">Посмотреть &raquo;</a></p>
 
 </div><!-- /.card-body -->

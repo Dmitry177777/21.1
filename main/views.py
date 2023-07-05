@@ -10,7 +10,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from main.forms import ProductForm, VersionForm
 from main.models import Product, Category, Blog, Version
-from main.services import  get_category_product
+#from main.services import get_category_product
 
 
 # Create your views here.
@@ -38,13 +38,20 @@ class CategoryListView(LoginRequiredMixin, ListView):
     }
 
 
+    # Метод переопределяет представление и выводит только продукты с атрибутом is_active=True)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(is_active=True)
+        return queryset
+
+class CategoryDetailView(LoginRequiredMixin, DetailView):
+    model = Category
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        # context_data['title'] = context_data['object'].product_category
-        context_data['product_list'] = get_category_product(self.product_category)
+        context_data['title'] = context_data['object'].product_category
+
         return context_data
-
-
 
 
 class ProductListView(LoginRequiredMixin, ListView):
