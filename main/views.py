@@ -1,5 +1,6 @@
 import random
 from django import forms
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.forms import inlineformset_factory
 from django.http import HttpResponse
@@ -10,7 +11,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from main.forms import ProductForm, VersionForm
 from main.models import Product, Category, Blog, Version
-#from main.services import get_category_product
+from main.services import get_category_product
 
 
 # Create your views here.
@@ -50,9 +51,10 @@ class CategoryDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = context_data['object']
-        context_data['product_list'] = self.object.product_set.all()
 
+        context_data['product_list'] = get_category_product(self.object)
         return context_data
+
 
 
 class ProductListView(LoginRequiredMixin, ListView):
