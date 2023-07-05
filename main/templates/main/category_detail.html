@@ -9,7 +9,8 @@
 
 
         <div class="container">
-                <div class="col-6">
+            <div class="row">
+                <div class="col-sm">
                 <div class="card">
                     <div class="card-header">Категория</div>
                          <div class="card-body">
@@ -26,29 +27,26 @@
                         </div>
                 </div>
                 </div>
-        </div>
-        <div class="container">
-                <div class="col-6">
+
+
+                <div class="col-sm">
                 <div class="card">
-                    <div class="card-header">Продукты</div>
+                    <div class="card-header">Перечень продуктов</div>
                          <div class="card-body">
                          <table class="table table-striped">
-                            <tr>
-                                <td class="w-25">Перечень продуктов</td>
 
-                            </tr>
-                                {% for product in object.product_set.all %}
+                                {% for product in product_list %}
                                     <tr>
                                      <td class="w-25">{{product.product_name}}</td>
                                     </tr>
 
                                 {% endfor %}
 
-
                         </table>
                     </div>
                 </div>
                 </div>
+            </div>
             <div class="card-footer">
                 <a href="{% url 'main:product_list' %}" class = "btn btn-primary"> <<Назад</a>
         </div>

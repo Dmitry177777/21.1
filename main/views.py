@@ -49,7 +49,8 @@ class CategoryDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['title'] = context_data['object'].product_category
+        context_data['title'] = context_data['object']
+        context_data['product_list'] = self.object.product_set.all()
 
         return context_data
 
