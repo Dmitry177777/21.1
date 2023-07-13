@@ -143,8 +143,9 @@ EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-EMAIL_HOST_USER = Yandex_mail
-EMAIL_HOST_PASSWORD = Yandex_password
+
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
@@ -161,7 +162,11 @@ AUTHENTICATION_BACKENDS = (
 
 LOGIN_URL = '/users/'
 
-CACHE_ENABLED = True
+CACHE_ENABLED = os.getenv('CACHE_ENABLED')
+CACHE_LOCATION = os.getenv('CACHE_LOCATION')
+
+
+
 CACHES = {
     "default": {
         "BACKEND":	"django.core.cache.backends.redis.RedisCache",
